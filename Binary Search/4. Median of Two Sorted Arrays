@@ -1,0 +1,51 @@
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if(nums1.length>nums2.length)
+            return findMedianSortedArrays(nums2,nums1);
+        int X = nums1.length;
+        int Y = nums2.length;
+        int half = (X+Y+1)/2;
+        int totalSize=X+Y;
+
+        int l=0,r=nums1.length;
+
+        int partitionX,partitionY; //Number of elements in the left partition from each Array
+
+        int maxLeftX,maxLeftY,minRightX,minRightY;
+
+        while(l<=r)
+        {
+
+            partitionX=(l+r)/2;
+            partitionY=half-partitionX;
+
+            maxLeftX=partitionX<=0?Integer.MIN_VALUE:nums1[partitionX-1];
+            minRightX=partitionX>=X?Integer.MAX_VALUE:nums1[partitionX];
+
+            maxLeftY=partitionY<=0?Integer.MIN_VALUE:nums2[partitionY-1];
+            minRightY=partitionY>=Y?Integer.MAX_VALUE:nums2[partitionY];
+
+            if(maxLeftX<=minRightY && maxLeftY<=minRightX)//correct partition formed
+            {
+                if(totalSize%2==1) //odd sized total
+                {
+                    return (double)Math.max(maxLeftX,maxLeftY);
+                }
+                else
+                {
+                    return (double)(Math.max(maxLeftX,maxLeftY)+Math.min(minRightX,minRightY))/2;
+                }
+
+            }
+            else if(maxLeftX>minRightY) //We need to traverse back (left) in the X Array
+            {
+                r=partitionX-1;
+            }
+            else //maxLeftY>minRightX, so we need more elements in the left side of the X array, therefore we traverse forward (right) in the X array 
+            {
+                l=partitionX+1;
+            }
+        }
+        return 0.0;
+    }
+}

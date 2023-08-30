@@ -1,0 +1,51 @@
+class Solution {
+    public String minWindow(String s, String t) {
+        int[] tCounter = new int[128];
+        int[] window = new int[128];
+        int index;
+        int l=0;
+        int minStart=0;
+        int have=0,need=t.length();
+        int res=Integer.MAX_VALUE;
+        
+        if(t.length()>s.length())
+            return "";
+//Create a HashMap for the Characters in String t
+        for(int i=0;i<t.length();i++)
+        {
+            tCounter[t.charAt(i)-'A']++;
+        }
+
+        for(int r=0;r<s.length();r++)
+        {
+            index=s.charAt(r)-'A';
+            window[index]++;
+
+//Checking if the window and the target string have the same number of character frequencies
+            if(tCounter[index]>0 && window[index]<=tCounter[index])
+            {
+                have++;
+            }
+
+            while(have==need)
+            {
+                if(r-l+1<res)
+                {
+                    minStart=l;
+                    res=r-l+1;
+                }
+                //pop out the character in the left
+                index=s.charAt(l)-'A';
+                window[index]--;
+                if(tCounter[index]>0 && tCounter[index]>window[index])
+                    have--;
+                l++;
+            }
+        }        
+        if(res!=Integer.MAX_VALUE)
+        {
+            return s.substring(minStart,minStart+res); 
+        }
+       return "";
+    }
+}

@@ -1,0 +1,32 @@
+class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        
+        int leftK=1, rightK=0;
+        int k,hours=0;
+        for(int i=0;i<piles.length;i++)
+        {
+            rightK=Math.max(rightK,piles[i]);
+        }
+        int res=rightK;
+        int time;
+        while(leftK<rightK)
+        {
+            hours=0;
+            k=(leftK+rightK)/2;  
+            for(int bananas:piles)
+            {
+                time=(bananas%k)==0?(bananas/k):(bananas/k)+1;
+                hours+=time;
+            }
+            if(hours<=h)
+            {
+                res=Math.min(res,k);
+                rightK=k;
+            }
+            else
+                leftK=k+1;
+        }
+        
+        return res;        
+    }
+}

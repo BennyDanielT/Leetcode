@@ -1,0 +1,73 @@
+class Node{
+    int timestamp;
+    String value;
+    Node(int timestamp,String value)
+    {
+        this.timestamp=timestamp;
+        this.value=value;
+    }
+}
+
+class TimeMap {
+HashMap<String,List<Node>> map;
+    public TimeMap() {
+        map=new HashMap<>();
+    }
+    
+    public void set(String key, String value, int timestamp) {
+        List<Node> list;
+        Node node = new Node(timestamp,value);
+        if(!map.containsKey(key))
+        {
+            list=new ArrayList<>();
+            list.add(node);
+            map.put(key,list);
+        }
+        else
+        {
+            list=map.get(key);
+            list.add(node);
+        }
+    }
+    
+    public String get(String key, int timestamp) {
+        if(!map.containsKey(key))
+            return "";
+
+        List<Node> list = map.get(key);
+        return binarySearch(list,0,list.size()-1,timestamp);        
+    }
+
+    private String binarySearch(List<Node> list, int start, int end,int target)
+    {
+        int mid=0;
+        while(start<=end)
+        {
+            mid=start+(end-start)/2;
+            if(list.get(mid).timestamp<target)
+            {
+                start=mid+1;
+            }
+            else if(list.get(mid).timestamp>target)
+            {
+                end=mid-1;
+            }
+            else
+            {
+            
+                return list.get(mid).value;
+
+            }
+        }
+        if(end>=0)
+            return list.get(end).value;
+        return "";
+    }
+}
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap obj = new TimeMap();
+ * obj.set(key,value,timestamp);
+ * String param_2 = obj.get(key,timestamp);
+ */

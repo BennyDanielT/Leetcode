@@ -1,0 +1,30 @@
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+
+        Deque<Integer> deq = new ArrayDeque<>();
+        int[] res = new int[nums.length-k+1];
+        int i=0,j=0;
+        while(j<nums.length)
+        {
+            while(!deq.isEmpty() && nums[deq.getLast()]<=nums[j])//Pop all the elements which are lesser than the present element since we are concerned only about the largest element, within each window
+            {
+                deq.removeLast();
+            }
+
+            //Add the current element's index to the end of the deque
+            deq.addLast(j);
+
+            //Ensure that the window size is <=k, else pop the first element
+            if(deq.getFirst()==j-k)//We are using j-k, since we desire to remove only one element in each operation, after which the window size =k
+                deq.removeFirst();
+
+            //Add the first element to the result, note that this element will always be the max, since we are popping out smaller elements
+            if(j+1>=k)
+                res[i++]=nums[deq.peek()];
+                j++;
+
+        }
+
+        return res;
+    }
+}

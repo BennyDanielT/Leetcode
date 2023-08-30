@@ -1,0 +1,50 @@
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+
+        int[] map1 = new int[26];
+        int[] map2 = new int[26];
+        int matches=0;
+        int l=0;
+        int currIndex;
+
+        if(s1.length()>s2.length())
+            return false;
+//Updated Maps for S1 and first n characters of S2 where n=s1.length
+        for(int i=0;i<s1.length();i++)
+        {
+            map1[s1.charAt(i)-'a']++;
+            map2[s2.charAt(i)-'a']++;
+        }
+//Calculate the initial number of matches, remember our goal is to return true when the number of matches = 26
+        for(int i=0;i<26;i++)
+        {
+            if(map1[i]==map2[i])
+                matches++;
+        }
+
+        for(int r=s1.length();r<s2.length();r++)
+        {
+            if(matches==26)
+                return true;
+        //Now we are gonna slide the window towards the right side, by adding one element on the right and another on the left
+        //Note that when we add a new element count to the map, we wither improve the number of matches or the counts might already be equal for the index and we would be affecting it by adding 1 to S2's map.
+            //Check if the addition of an element on the right improves or deterioates the number of matches
+            currIndex=s2.charAt(r)-'a';
+            map2[currIndex]++;
+            if(map1[currIndex]==map2[currIndex])
+                matches++;
+            else if(map1[currIndex]+1==map2[currIndex])//Counts were equal but now aren't after the sliding the window
+                matches--;
+
+            //Check if the removal of an element on the left improves or deterioates the number of matches
+            currIndex=s2.charAt(l)-'a';
+            map2[currIndex]--;
+            if(map1[currIndex]==map2[currIndex])
+                matches++;
+            else if(map1[currIndex]-1==map2[currIndex])
+                matches--;
+            l++;
+        }
+       return matches==26; 
+    }
+}
